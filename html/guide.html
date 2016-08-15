@@ -1,0 +1,272 @@
+<nav>
+	<ul>
+		<li><a class="anchor noselect" href="#download"><b>Téléchargement</b></a></li>
+		<li><hr /></li>
+		<li><a class="anchor noselect" href="#routing">Routing</a></li>
+		<li><a class="anchor noselect" href="#php-variables"><b>PHP</b>: Variables</a></li>
+		<li><a class="anchor noselect" href="#php-methods"><b>PHP</b>: Méthodes</a></li>
+		<li><a class="anchor noselect" href="#html-variables"><b>HTML</b>: Variables</a></li>
+		<li><a class="anchor noselect" href="#js-variables"><b>JS</b>: Variables</a></li>
+		<li><a class="anchor noselect" href="#mysql">MySQL</a></li>
+		<li><a class="anchor noselect" href="#mail">Mail</a></li>
+		<li><a class="anchor noselect" href="#translate">Traduction</a></li>
+		<li><a class="anchor noselect" href="#others">Autres</a></li>
+	</ul>
+</nav>
+
+{if $print_download == 1}
+
+<!-- Exemple d'utilisation de la balise `language` -->
+
+<div id="download-container" class="text-center container">
+	<h2 id="download" class="text-center">Underscore</h2>
+	<span class="glyphicon glyphicon-download"></span><br />
+	<h2>Télécharger Underscore</h2>
+	version 1.0
+	<a href="http://rbenoit.fr/files/underscore-1.0.zip" class="noselect block" download></a>
+	<br />
+</div>
+
+<div class="container" style="padding: 0">
+	<div class="well text-center noselect">
+		PHP 7 <span class="glyphicon glyphicon-menu-right"></span>
+		Smarty <span class="glyphicon glyphicon-menu-right"></span>
+		MySQL <span class="glyphicon glyphicon-menu-right"></span>
+		Bootstrap <span class="glyphicon glyphicon-menu-right"></span>
+		JQuery
+	</div>
+</div>
+
+<!-- // -->
+
+{/if}
+
+<section id="page" class="container" style="border-top: 0;">
+
+	<h1 id="routing">Guide complet</h1>
+	<br />
+	<h3><b>Créer une route</b></h3>
+	<i>Exemple pour la route <b>{$siteurl}/user</b></i><br />
+	<br />
+	- Créer fichier <code>/controllers/<b>user.php</b></code><br />
+	- Créer fichier <code>/html/<b>user.html</b></code>
+	<br />
+	<br />
+	C'est finis !
+	<br />
+	<br />
+	<div class="alert alert-info" role="alert">
+		La route est contenu dans <code>_::$route</code><br />
+		<b>Exemple:</b> <a target="_blank" href="{$siteurl}/guide/demo/element_2/element_3">{$siteurl}/guide/demo/element_2/element_3</a><br />
+		<br />
+		Pour définir un fichier HTML personnalisé, il faut mettre dans le controller: <code>_::$html = 'un_dossier/un_fichier.html';</code>
+	</div>
+	- Pour avoir un nom SEO Friendly dans le controller, vous pouvez créer un alias dans <code>/framework/config.ini</code><br />
+	Ainsi, la variable <code>_::$is_alias</code> passe à <code>true</code>.<br />
+	<br />
+	<b>Exemple d'un alias de <code>/guide</code>: </b><a href="{$siteurl}/un%20accès%20seo%20friendly">{$siteurl}/un accès seo friendly</a><br />
+	{if $aliased == 1}
+	<div class="alert alert-success" role="alert" style="margin-top: 10px;">
+		<b>Vous voyez ?</b> Maintenant le nom du controller est SEO friendly<br />
+		<a href="{$siteurl}/guide">Retour vers le nom du controller classique</a>
+	</div>
+	{/if}
+	<br />
+	<i>Pour forcer l'utilisation d'un alias, il est possible de faire cela dans le controller: </i><code>if (!_::$is_alias) _::not_found();</code><br />
+	<hr />
+
+	<h3 id="php-variables"><b>Underscore</b> PHP variables</h3>
+
+	<p><code>_::$charset</code> Le charset de la page.</p>
+	<p><code>_::$langue</code> La langue de la page.</p>
+	<p><code>_::$html</code> Le fichier HTML a charger (par défaut le nom du controller).</p>
+	<p><code>_::$robots</code> Le meta "robots".</p>
+	<p><code>_::$description</code> Le description de la page.</p>
+	<p><code>_::$title</code> Le titre de la page.</p>
+	<p><code>_::$environment</code> DEV ou PROD ; notre environnement.</p>
+	<p><code>_::$viewport</code> Le viewport de la page.</p>
+	<p><code>_::$route</code> Un array contenant la route.</p>
+	<p><code>_::$dev_environment []= </code> Contient les noms de domaine de dev.</p>
+	<p><code>_::$js_async []= </code> Charge un fichier JS dans le &lt;body&gt;.</p>
+	<p><code>_::$js []= </code> Charge un fichier JS dans le &lt;head&gt;.</p>
+	<p><code>_::$css_async []= </code> Charge un fichier CSS dans le &lt;body&gt;.</p>
+	<p><code>_::$css []= </code> Charge un fichier CSS dans le &lt;head&gt;.</p>
+	<p><code>_::$is_mobile</code> Si l'internaute utilise un PC de bureau ou non.</p>
+	<p><code>_::$is_tablet</code> Si l'internaute utilise une tablette ou non.</p>
+	<p><code>_::$is_desktop</code> Si l'internaute utilise un mobile ou non.</p>
+	<p><code>_::$js_variables []= ["key" => "nom_de_variable", "value" => "Valeur_de_variable"]; </code> Permet de passer une variable du PHP au JS.</p>
+
+	<div class="alert alert-info" role="alert">
+		Les valeurs par defaut sont contenus dans <code>/framework/global.php</code>.<br />
+		Ce fichier est appelé avant le controller et vous pouvez y mettre du code PHP qui sera exécuté à chaque appel de page.
+	</div>
+
+	<hr />
+
+	<h3 id="php-methods"><b>Underscore</b> PHP Méthodes</h3>
+
+	<p><code>_::quit();</code> Quitte le controller prématurément sans erreur.</p>
+	<p><code>_::not_found();</code> Déclare une erreur 404.</p>
+	<p><code>_::assign($key, $value);</code> Assigne une variable HTML.</p>
+	<p><code>_::redirection('/users/john87');</code> ou <code>_::redirection('http://google.com', 304);</code> Redirection vers une URL (par défaut code 302)</p>
+
+	<hr />
+
+	<h3 id="html-variables"><b>HTML</b> variables</h3>
+
+	<p><code>{literal}{$siteurl}{/literal}</code> L'URL du site.</p>
+	<p><code>{literal}{$scriptname}{/literal}</code> Le nom du controller.</p>
+	<p><code>{literal}{$language}{/literal}</code> La langue utilisée</p>
+	<p><code>{literal}{$is_desktop}{/literal}</code> Si l'internaute utilise un PC de bureau ou non.</p>
+	<p><code>{literal}{$is_tablet}{/literal}</code> Si l'internaute utilise une tablette ou non.</p>
+	<p><code>{literal}{$is_mobile}{/literal}</code> Si l'internaute utilise un mobile ou non.</p>
+
+	<hr />
+
+	<h3 id="js-variables"><b>JS</b> variables</h3>
+
+	<p><code>siteurl</code> L'URL du site.</p>
+	<p><code>scriptname</code> Le nom du controller.</p>
+	<p><code>language</code> La langue utilisée</p>
+	<p><code>is_desktop</code> Si l'internaute utilise un PC de bureau ou non.</p>
+	<p><code>is_tablet</code> Si l'internaute utilise une tablette ou non.</p>
+	<p><code>is_mobile</code> Si l'internaute utilise un mobile ou non.</p>
+
+	<hr />
+
+	<h3 id="mysql"><b>Mysql</b> PHP Méthodes</h3>
+
+	<div class="alert alert-info" role="alert">
+		Les données de connexion MYSQL doivent être renseignées dans le fichier <code>framework/config.ini</code>
+	</div>
+
+	<p><code>mysql::connect();</code> Se connecte à la BDD.</p>
+	<p><code>mysql::query($sql);</code> Exécute une requête et retourne $query.</p>
+	<p><code>mysql::row($query);</code> Retourne une ligne de résultat de la requête $query.</p>
+	<p><code>mysql::tab($query);</code> Retourne toutes les lignes de résultat de la requête $query.</p>
+	<p><code>mysql::escape($string);</code> Retourne un champ string protégé des injections SQL</p>
+	<p><code>mysql::last_id();</code> Retourne l'id du dernier INSERT.</p>
+	<p><code>mysql::is_connect();</code> Sommes nous connecté à la BDD ?</p>
+	<p><code>mysql::close();</code> Ferme la connexion.</p>
+
+	<hr />
+
+	<h3 id="mail"><b>Mail</b> PHP variables</h3>
+
+	<div class="alert alert-info" role="alert">
+		Les données de connexion SMTP doivent être renseignées dans le fichier <code>framework/config.ini</code>
+	</div>
+
+	<p><code>mail::$from_email</code> Email de l'expéditeur.</p>
+	<p><code>mail::$from_name</code> Nom de l'expéditeur.</p>
+	<p><code>mail::$message</code> Message de l'email (Texte brut ou HTML)</p>
+	<p><code>mail::$to</code> Liste de destinataire</p>
+	<p><code>mail::$subject</code> <i>Optionnel</i> - Sujet de l'email</p>
+	<p><code>mail::$replyto</code> <i>Optionnel</i> - Champ "répondre à"</p>
+	<p><code>mail::$files</code> <i>Optionnel</i> - Liste de fichier à mettre en pièce jointe</p>
+	<p><code>mail::$bcc</code> <i>Optionnel</i> - Liste d'adresses email en copie masquée</p>
+	<p><code>mail::$cc</code> <i>Optionnel</i> - Liste d'adresses email en copie</p>
+	<p><code>mail::$encoding</code> <i>Optionnel</i> - L'encodage <i>par défaut: iso-8859-2</i>.</p>
+
+	<hr />
+
+	<h3><b>Mail</b> PHP Méthodes</h3>
+
+	<p><code>mail::send();</code> Envoi l'email.</p>
+
+	<hr />
+
+	<h3 id="translate"><b>Traduction</b></h3>
+
+	Il faut avoir un fichier XML dans: <b>language/_LANGUAGE_/_SCRIPTNAME_.xml</b><br />
+	Exemple pour la route <b>{$siteurl}/user</b> dans la langue <b>anglaise</b>: <code>/language/en/user.xml</code><br />
+	<br />
+	Exemple du contenu du fichier <b>user.xml</b><br />
+	<br />
+	<code style="display: block;background: #F9F2F4;margin-bottom: 10px;">
+		&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br />
+		&lt;translations&gt;<br />
+			<span style="color: #FF4646;">&emsp;&emsp;&emsp;&lt;!-- Traduction d'un text simple --&gt;</span><br />
+		    &emsp;&emsp;&emsp;&lt;translation <span style="color: #34A534">id</span>="<b style="color: #AD2E2E">some_content_id</b>"&gt;<br />
+		    	&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&lt;<span style="color: #777;">![CDATA[</span><span style="color: #111;font-weight: bold;">&lt;b&gt;Underscore&lt;/b&gt; is a great framework !</span><span style="color: #777;">]]</span>&gt;<br />
+		    &emsp;&emsp;&emsp;&lt;/translation&gt;<br />
+			<span style="color: #FF4646;">&emsp;&emsp;&emsp;&lt;!-- Traduction d'un text avec variable smarty --&gt;</span><br />
+		    &emsp;&emsp;&emsp;&lt;translation <span style="color: #34A534">id</span>="<b style="color: #AD2E2E">hello_you</b>"&gt;<br />
+		    	&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&lt;<span style="color: #777;">![CDATA[</span><span style="color: #111;font-weight: bold;">Hello</span>&nbsp;<span style="color: #31708F;">##login##</span><span style="color: #777;">]]</span>&gt;<br />
+		    &emsp;&emsp;&emsp;&lt;/translation&gt;<br />
+			<span style="color: #FF4646;">&emsp;&emsp;&emsp;&lt;!-- Traduction du titre de la page --&gt;</span><br />
+		    &emsp;&emsp;&emsp;&lt;translation <span style="color: #34A534">target</span>="<b style="color: #AD2E2E">title</b>"&gt;<br />
+		    	&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&lt;<span style="color: #777;">![CDATA[</span><span style="color: #111;font-weight: bold;">Underscore is a great framework !</span><span style="color: #777;">]]</span>&gt;<br />
+		    &emsp;&emsp;&emsp;&lt;/translation&gt;<br />
+		    <span style="color: #FF4646;">&emsp;&emsp;&emsp;&lt;!-- Traduction de la description de la page --&gt;</span><br />
+		    &emsp;&emsp;&emsp;&lt;translation <span style="color: #34A534">target</span>="<b style="color: #AD2E2E">description</b>"&gt;<br />
+		    	&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&lt;<span style="color: #777;">![CDATA[</span><span style="color: #111;font-weight: bold;">Underscore, PHP 7 Light Framework</span><span style="color: #777;">]]</span>&gt;<br />
+		    &emsp;&emsp;&emsp;&lt;/translation&gt;<br />
+			<span style="color: #FF4646;">&emsp;&emsp;&emsp;&lt;!-- Traduction d'une balise meta --&gt;</span><br />
+		    &emsp;&emsp;&emsp;&lt;translation <span style="color: #34A534">target</span>="<b style="color: #AD2E2E">meta</b>" <span style="color: #34A534">property</span>="<b style="color: #AD2E2E">appid</b>"&gt;<br />
+		    	&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&lt;<span style="color: #777;">![CDATA[</span><span style="color: #111;font-weight: bold;">0123456789</span><span style="color: #777;">]]</span>&gt;<br />
+		    &emsp;&emsp;&emsp;&lt;/translation&gt;<br />
+		&lt;/translations&gt;<br />
+	</code>
+
+	Suivant l'exemple ci-dessus, pour assigner la variable <b>"login"</b> il faut procéder ainsi <i>(dans le controller)</i>: <code>_::assign('login', 'John87');</code><br />
+	<br />
+	Dans le fichier HTML, placez le texte à traduire ainsi: <code>{literal}{language}hello_you{/language}{/literal}</code><br /><br />
+
+	<div class="alert alert-info" role="alert">
+		<u>Par défaut, le module de traduction est actif !</u> Pour le désactiver sur tout le site, il suffit de mettre cela dans le fichier <b>global.php</b>: <code>_::$translate = false;</code><br />
+		Vous avez aussi le choix de l'activer ou le désactiver pour une page bien précise en mettant ce code dans votre controller.<br /><br />
+		Underscore détecte automatiquement la langue du navigateur et l'enregistre dans <code>_::$language</code><br />
+		Si le fichier <b>XML</b> n'existe pas pour la langue de l'internaute, on utilisera la langue contenu dans <code>_::$default_language</code> <i>(par défaut: <b>en</b>)</i><br /><br />
+		Pour forcer l'utilisation d'une langue particulière, vous pouvez procéder ainsi: <code>_::$language = 'en';</code>
+	</div>
+
+	<hr />
+
+	<h3 id="others"><b>Autres</b></h3>
+
+	<p>Afficher un captcha: <code>&lt;img src='{literal}{$siteurl}{/literal}/ajax/captcha.php' /&gt;</code> - <i>(stocké en MD5 dans </i><code>$_SESSION["captcha"]</code><i>)</i>. - <a target="_blank" href="{$siteurl}/ajax/captcha.php">afficher un exemple</a></p>
+
+	<p>Déclarer une erreur: <code>error(401, 'The text you want to output');</code> Liste des codes d'erreurs:</p>
+	
+	<dl class="dl-horizontal">
+		<dt>301</dt><dd>Moved Permanently</dd>
+		<dt>302</dt><dd>Moved Temporarily</dd>
+		<dt>307</dt><dd>Temporary Redirect</dd>
+		<dt>308</dt><dd>Permanent Redirect</dd>
+		<dt>310</dt><dd>Too many Redirects</dd>
+		<dt>400</dt><dd>Bad request</dd>
+		<dt>401</dt><dd>Unauthorized</dd>
+		<dt>402</dt><dd>PaymentRequired</dd>
+		<dt>403</dt><dd>Forbidden</dd>
+		<dt>404</dt><dd>Not found</dd>
+		<dt>410</dt><dd>Gone</dd>
+		<dt>500</dt><dd>Internal Error</dd>
+		<dt>501</dt><dd>Not implemented</dd>
+		<dt>502</dt><dd>Service temporarily overloaded</dd>
+		<dt>507</dt><dd>Insufficient storage</dd>
+		<dt>508</dt><dd>Loop detected</dd>
+	</dl>
+
+	<br />
+
+	<hr />
+
+	<div class="text-center">
+		<h4>
+			<b>Voila !</b><br />
+			<br />
+			Si vous avez tout compris ;<br />
+			<br />
+			Les fichiers <code>/html/guide.html</code> &amp; <code>/controllers/guide.php</code> peuvent être supprimés !<br /><br />
+			Vous pouvez aussi supprimer l'alias <code>alias["guide"] = "un%20acc%C3%A8s%20seo%20friendly"</code><br />dans le fichier <code>/framework/config.ini</code><br /><br />
+			{if $print_download == 0}
+			<div style="color: #31708F"><b>Note:</b> Vous retrouverez tout le guide sur <code><a target="_blank" title="Guide du framework Underscore" href="http://rbenoit.fr/guide">http://rbenoit.fr/guide</a></code></div>
+			{/if}
+		</h4>
+	</div>
+
+	<br />
+	<br />
+
+</section>

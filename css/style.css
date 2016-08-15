@@ -1,0 +1,39 @@
+html, body {
+	min-height: 100%;
+	height: 100%;
+}
+
+body { overflow-y: scroll; }
+
+::selection {
+	background: #18CE8E;
+	color: #FFFFFF;
+}
+
+::-moz-selection {
+	background: #18CE8E;
+	color: #FFFFFF;
+}
+
+.noselect {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.noselect:focus { outline: none; }
+
+.round {
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	border-radius: 50%;
+}
+
+/* DELETE THIS */
+
+body,footer#footer,header#header{background:#222}a.block,nav,nav ul li a{display:block}header#header{font-size:22px;padding:25px 0;color:#999}header#header a{display:block;color:inherit}h3{margin-bottom:25px}section#page{background:#FFF;border:1px solid #000;min-height:calc(100% - 135px);min-height:-webkit-calc(100% - 135px);min-height:-moz-calc(100% -135px)}header#header b{color:#FFF}header#header b#brand{margin:-5px -100px 0 10px;color:#5AECBD;font-size:28px}header#header img#logo{border:4px solid #222;margin-top:-7px}footer#footer{padding:15px 0;color:#999}dl{font-size:11.5px}dl dt{width:45px}dl dd{margin-left:60px}nav{position:fixed;width:150px}nav ul{list-style:none}nav ul li{line-height:30px}nav ul li hr{border-top: 1px solid #3b3b3b}nav ul li a{color:#CCC}div.well{margin: 35px 0px;font-size: 20px;color: #777}div.well span.glyphicon{color: #BBB;font-size: 15px;margin: 0 10px}nav ul li a:hover{color:#EEE}h5{font-weight:700}div#download-container{background: #37CE9D;padding: 10px;border:1px solid #000;border-bottom: 0;color:#0e6347;position:relative}div#download-container h1{margin: 20px 0 30px 0}div#download-container a{position: absolute;width:100%;height:100%;display: block;z-index:10;top:0;left:0}div#download-container span.glyphicon{font-size: 64px}div.well{margin:0;-webkit-border-radius: 0;-moz-border-radius: 0;border-radius: 0;border:1px solid #000;border-top:0;border-bottom:0;background:#37CE9D;color: #268465;-webkit-box-shadow: none;box-shadow: none}div.well span.glyphicon{color: #0ea473}@media screen and (max-width:1480px){nav{display:none}}
+
+/* // */

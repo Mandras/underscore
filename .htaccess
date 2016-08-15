@@ -1,0 +1,75 @@
+######## URL rewriting ########
+
+Options +FollowSymLinks -MultiViews
+
+<IfModule mod_rewrite.c>
+
+    RewriteEngine  on
+
+    # Protection de la lecture des répertoires
+
+    RewriteCond %{REQUEST_URI} ^/api/*
+    RewriteRule ^.*$ /index.php [R=403,NC,L]
+
+    RewriteCond %{REQUEST_URI} ^/cache/*.php*
+    RewriteRule ^.*$ /index.php [R=403,NC,L]
+
+    RewriteCond %{REQUEST_URI} ^/language/*
+    RewriteRule ^.*$ /index.php [R=403,NC,L]
+
+    RewriteCond %{REQUEST_URI} ^/classes/*
+    RewriteRule ^.*$ /index.php [R=403,NC,L]
+
+    RewriteCond %{REQUEST_URI} ^/controllers/*
+    RewriteRule ^.*$ /index.php [R=403,NC,L]
+
+    RewriteCond %{REQUEST_URI} ^/framework/*
+    RewriteRule ^.*$ /index.php [R=403,NC,L]
+
+    RewriteCond %{REQUEST_URI} ^/html/*
+    RewriteRule ^.*$ /index.php [R=403,NC,L]
+
+    RewriteCond %{REQUEST_URI} ^/logs/*
+    RewriteRule ^.*$ /index.php [R=403,NC,L]
+
+    RewriteCond %{REQUEST_URI} ^/models/*
+    RewriteRule ^.*$ /index.php [R=403,NC,L]
+
+    # Rewrite du framework
+
+    RewriteCond %{REQUEST_URI} ^/images/*
+    RewriteRule ^.*$ /image.php [L]
+
+    RewriteCond %{REQUEST_FILENAME} \.
+    RewriteRule ^.*$ - [L]
+    RewriteRule ^.*$ /index.php [L]
+
+</IfModule>
+
+<IfModule !mod_rewrite.c>
+
+    order deny,allow
+    deny from all
+
+</IfModule>
+
+######## Securité ########
+
+<files .htaccess>
+    order allow,deny
+    deny from all
+</files>
+
+<files sftp-config.json>
+    order allow,deny
+    deny from all
+</files>
+
+ServerSignature Off
+Options -Indexes
+
+######## Autres ########
+
+php_flag  log_errors        on
+php_flag  display_errors    off
+php_value upload_tmp_dir    "temporary/"

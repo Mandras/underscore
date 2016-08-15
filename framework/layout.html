@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="{$_Language}" lang="{$_Language}">
+<head>
+    <title>{$_Title}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset={$_Charset}" />
+    <link rel="icon" type="image/png" href="{$siteurl}/images/favicon.png" />
+    <!--[if IE]><link rel="shortcut icon" type="image/x-icon" href="{$siteurl}/images/favicon.ico" /><![endif]-->
+    <!--[if lt IE 9]><script type="text/javascript" src="{$siteurl}/js/html5shiv.min.js"></script><![endif]-->
+
+    {if $_JSVariables ne ''}{if $_Environment === 0}<script type="text/javascript">/*<![CDATA[*/{section loop=$_JSVariables name=_JSV}var {$_JSVariables[_JSV].key}={if is_numeric($_JSVariables[_JSV].value)}{$_JSVariables[_JSV].value}{else}"{$_JSVariables[_JSV].value}"{/if};{/section}/*]]>*/</script>{else}
+    <script type="text/javascript">
+//<![CDATA[
+{section loop=$_JSVariables name=_JSV}
+var {$_JSVariables[_JSV].key} = {if is_numeric($_JSVariables[_JSV].value)}{$_JSVariables[_JSV].value}{else}"{$_JSVariables[_JSV].value}"{/if};
+{/section}
+//]]>
+</script>
+    {/if}
+    {/if}
+
+    {section loop=$_CSS name=_c}
+    {if $_CSS[_c]|strpos:$_RequestScheme === 0}
+    <link rel="stylesheet" type="text/css" href="{$_CSS[_c]}" />
+    {else}
+    <link rel="stylesheet" type="text/css" href="{$siteurl}/css/{$_CSS[_c]}" />
+    {/if}
+    {/section}
+
+    {section loop=$_JS name=_j}
+    {if $_JS[_j]|strpos:$_RequestScheme === 0}
+    <script type="text/javascript" src="{$_JS[_j]}"></script>
+    {else}
+    <script type="text/javascript" src="{$siteurl}/js/{$_JS[_j]}"></script>
+    {/if}
+    {/section}
+
+    <meta name="viewport" content="{$_ViewPort}" />
+    <meta name="description" content="{$_Description}" />
+    <meta name="robots" content="{$_Robots}" />
+
+    {foreach from=$_Metas key=_mk item=_mi}
+    <meta property="{$_mk}" content="{$_mi}" />
+    {/foreach}
+
+    {if $_Environment === 1}
+        <!--
+            Temps d'execution total PHP  : {$_execution_time_php} secondes
+            Temps d'execution total MYSQL: {$_execution_time_mysql} secondes
+            Temps d'execution total Total: {$_execution_time_total} secondes
+        -->
+    {/if}
+</head> 
+<body>
+
+    {include file="header.html"}
+
+    {include file="$_HTML"}
+
+    {include file="footer.html"}
+
+    {*
+    ** JS and CSS loaded asynchronously - so the page load faster
+    *}
+
+    {section loop=$_CSSAsync name=_cssasync}
+    {if $_CSSAsync[_cssasync]|strpos:$_RequestScheme === 0}
+    <link rel="stylesheet" type="text/css" property='stylesheet' href="{$_CSSAsync[_cssasync]}" />
+    {else}
+    <link rel="stylesheet" type="text/css" property='stylesheet' href="{$siteurl}/css/{$_CSSAsync[_cssasync]}" />
+    {/if}
+    {/section}
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script type="text/javascript" src="{$siteurl}/js/jquery.min.js"><\/script>')</script>
+
+    {section loop=$_JSAsync name=_jsasync}
+    {if $_JSAsync[_jsasync]|strpos:$_RequestScheme === 0}
+    <script type="text/javascript" src="{$_JSAsync[_jsasync]}"></script>
+    {else}
+    <script type="text/javascript" src="{$siteurl}/js/{$_JSAsync[_jsasync]}"></script>
+    {/if}
+    {/section}
+
+</body>
+</html>

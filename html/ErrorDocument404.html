@@ -1,0 +1,10 @@
+<section id="page" class="container">
+    <div class="container">
+        <blockquote>
+            <h1>Erreur 404</h1>
+            <p>Page introuvable.</p>
+            {if $Error404Reason}<footer>{$Error404Reason}</footer>{/if}
+        </blockquote>
+        {$404Details}
+    </div>
+</section>
