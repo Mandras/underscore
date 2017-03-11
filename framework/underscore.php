@@ -1,5 +1,10 @@
 <?php
 
+/*
+** UNDERSCORE - http://rbenoit.fr
+** v1.0
+*/
+
 require_once(__DIR__ . "/smarty/Smarty.class.php");
 
 require_once(__DIR__ . "/../classes/error.php");
@@ -128,6 +133,7 @@ class _ {
 		if (sizeof(self::$route) >= 2 && self::$route[0] == 'ajax' && file_exists(__DIR__ . '/../ajax/' . self::$route[1] . '.php')) {
 			self::log('ajax');
 			require_once(__DIR__ . '/../ajax/' . self::$route[1] . '.php');
+			mysql::close();
 			exit(0);
 		}
 
@@ -201,9 +207,9 @@ class _ {
 	* Quitte l'execution de la page tout en affichant ce qui doit etre affiche
 	* @param  $status   Le code pour exit() => 0 = tout est ok, 1 => erreur
 	*
-	* @access private
+	* @access public
 	*/
-	private static function quit($status = 0) {
+	public static function quit($status = 0) {
 
 		// Verification de la presence des HTML
 
@@ -279,11 +285,6 @@ class _ {
 		self::assign('_Charset', 		self::$charset);
 		self::assign('_Language', 		self::$langue);
 		self::assign("_Metas", 			self::$metas);
-		self::assign("_CSS", 			self::$css);
-		self::assign('_CSSAsync', 		self::$css_async);
-		self::assign('_JS', 			self::$js);
-		self::assign('_JSAsync', 		self::$js_async);
-		self::assign('_JSVariables', 	self::$js_variables);
 		self::assign('_Environment', 	self::$environment);
 
 		self::assign('siteurl', 		self::$siteurl);
@@ -292,6 +293,60 @@ class _ {
 		self::assign('is_desktop', 		self::$is_desktop);
 		self::assign('is_tablet', 		self::$is_tablet);
 		self::assign('is_mobile', 		self::$is_mobile);
+
+		// Encodage des assets CSS & JS
+
+		foreach (self::$css as $key => $value) {
+			if (filter_var($value, FILTER_VALIDATE_URL) === false)
+				self::$css[$key] = self::$siteurl . '/css/' . $value;
+		}
+
+		foreach (self::$css_async as $key => $value) {
+			if (filter_var($value, FILTER_VALIDATE_URL) === false)
+				self::$css_async[$key] = self::$siteurl . '/css/' . $value;
+		}
+
+		foreach (self::$js as $key => $value) {
+			if (filter_var($value, FILTER_VALIDATE_URL) === false)
+				self::$js[$key] = self::$siteurl . '/js/' . $value;
+		}
+
+		foreach (self::$js_async as $key => $value) {
+			if (filter_var($value, FILTER_VALIDATE_URL) === false)
+				self::$js_async[$key] = self::$siteurl . '/js/' . $value;
+		}
+
+		self::assign("_CSS",		self::$css);
+		self::assign('_CSSAsync',	self::$css_async);
+		self::assign('_JS',			self::$js);
+		self::assign('_JSAsync',	self::$js_async);
+
+		// Encodage des variables JS
+
+		foreach (self::$js_variables as $key => $value) {
+			switch (gettype($value["value"])) {
+				case "boolean" 	:
+					if ($value["value"]) self::$js_variables[$key]["value"] = 'true';
+					else self::$js_variables[$key]["value"] = 'false';
+				break;
+				case "integer" 	: break;
+				case "double" 	: break;
+				case "string" 	:
+					self::$js_variables[$key]["value"] = "'" . str_replace("'", "\'", $value["value"]) . "'";
+				break;
+				case "object"	:
+				case "resource"	:
+				case "array" 	:
+					self::$js_variables[$key]["value"] = "'" . str_replace("'", "\'", json_encode($value["value"])) . "'";
+				break;
+				case "NULL" 	:
+				default 		:
+					self::$js_variables[$key]["value"] = 'null';
+				break;
+			}
+		}
+
+		self::assign('_JSVariables', self::$js_variables);
 
 		// Affichage du HTML & fin d'execution
 
@@ -372,34 +427,53 @@ class _ {
 	*
 	* @access private
 	*/
-	private function cache_generator(&$array, $type = '') {
+	private function cache_generator(&$array, $type = '', $force = false) {
 
 		if (!empty($array) && ($type == 'js' || $type == 'css')) { $directory = __DIR__ . '/../' . $type . '/'; }
 		else return (array());
 
-		require_once(__DIR__ . '/../api/minifier/' . $type . '.php');
-
 		$total_mtime = 0;
+		$ext_array = array();
 		foreach ($array as $value) {
-			if (file_exists($directory . $value)) $total_mtime += filemtime($directory . $value);
-			else return (array());
+			if (filter_var($value, FILTER_VALIDATE_URL) === false) {
+				if (file_exists($directory . $value)) $total_mtime += filemtime($directory . $value);
+				else return (array());
+			}
+			else $ext_array []= $value;
 		}
+
+		if ($total_mtime == 0) return (array());
 
 		$total_mtime = md5($total_mtime);
 
-		if (!file_exists(__DIR__ . '/../cache/' . $total_mtime . '.' . $type)) {
+		if (!file_exists(__DIR__ . '/../cache/' . $total_mtime . '.' . $type) || $force == true) {
 			if (!file_exists(__DIR__ . '/../cache/') || !is_dir(__DIR__ . '/../cache/'))
 				mkdir(__DIR__ . '/../cache/');
 
 			$filecontent = '';
-			foreach ($array as $value) { $filecontent .= file_get_contents($directory . $value, FILE_USE_INCLUDE_PATH); }
+			foreach ($array as $value) {
+				if (filter_var($value, FILTER_VALIDATE_URL) === false)
+					$filecontent .= file_get_contents($directory . $value, FILE_USE_INCLUDE_PATH);
+			}
 
-			if ($type == 'js') $filecontent = JSMinPlus::minify($filecontent);
-			else $filecontent = CssMin::minify($filecontent);
+			if (empty($filecontent)) return (array());
 
-			if (!file_put_contents(__DIR__ . '/../cache/' . $total_mtime . '.' . $type, $filecontent)) return (array());
+			if ($type == 'js') $ch = curl_init('http://javascript-minifier.com/raw');
+			else $ch = curl_init('http://cssminifier.com/raw');
+
+			curl_setopt($ch, CURLOPT_POST, 1);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, array('input' => $filecontent));
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+			$minified = curl_exec($ch);
+
+			curl_close($ch);
+
+			if (empty($minified)) $minified = $filecontent;
+			if (!file_put_contents(__DIR__ . '/../cache/' . $total_mtime . '.' . $type, $minified)) return (array());
 		}
 		$array = array($_SERVER["REQUEST_SCHEME"] . '://' . $_SERVER["HTTP_HOST"] . '/cache/' . $total_mtime . '.' . $type);
+		foreach ($ext_array as $value) { $array []= $value; }
 	}
 
 	/**

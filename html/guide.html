@@ -109,6 +109,7 @@
 	<p><code>_::not_found();</code> Déclare une erreur 404.</p>
 	<p><code>_::assign($key, $value);</code> Assigne une variable HTML.</p>
 	<p><code>_::redirection('/users/john87');</code> ou <code>_::redirection('http://google.com', 304);</code> Redirection vers une URL (par défaut code 302)</p>
+	<p><code>_::log($category, $message = '');</code> Inscrit une ligne dans le journal des logs.</p>
 
 	<hr />
 
@@ -214,8 +215,8 @@
 	Dans le fichier HTML, placez le texte à traduire ainsi: <code>{literal}{language}hello_you{/language}{/literal}</code><br /><br />
 
 	<div class="alert alert-info" role="alert">
-		<u>Par défaut, le module de traduction est actif !</u> Pour le désactiver sur tout le site, il suffit de mettre cela dans le fichier <b>global.php</b>: <code>_::$translate = false;</code><br />
-		Vous avez aussi le choix de l'activer ou le désactiver pour une page bien précise en mettant ce code dans votre controller.<br /><br />
+		<u>Par défaut, le module de traduction est actif !</u> Pour le désactiver sur tout le site, il suffit de mettre <code>translate = false</code> dans le fichier <b>config.ini</b><br />
+		Vous avez aussi le choix de l'activer ou le désactiver pour une page bien précise en mettant ce code dans votre controller: <code>_::$translate = true;</code><br /><br />
 		Underscore détecte automatiquement la langue du navigateur et l'enregistre dans <code>_::$language</code><br />
 		Si le fichier <b>XML</b> n'existe pas pour la langue de l'internaute, on utilisera la langue contenu dans <code>_::$default_language</code> <i>(par défaut: <b>en</b>)</i><br /><br />
 		Pour forcer l'utilisation d'une langue particulière, vous pouvez procéder ainsi: <code>_::$language = 'en';</code>
@@ -225,7 +226,7 @@
 
 	<h3 id="others"><b>Autres</b></h3>
 
-	<p>Afficher un captcha: <code>&lt;img src='{literal}{$siteurl}{/literal}/ajax/captcha.php' /&gt;</code> - <i>(stocké en MD5 dans </i><code>$_SESSION["captcha"]</code><i>)</i>. - <a target="_blank" href="{$siteurl}/ajax/captcha.php">afficher un exemple</a></p>
+	<p>Afficher un captcha: <code>&lt;img src='{literal}{$siteurl}{/literal}/ajax/captcha' /&gt;</code> - <i>(stocké en MD5 dans </i><code>$_SESSION["captcha"]</code><i>)</i>. - <a target="_blank" href="{$siteurl}/ajax/captcha">afficher un exemple</a></p>
 
 	<p>Déclarer une erreur: <code>error(401, 'The text you want to output');</code> Liste des codes d'erreurs:</p>
 	

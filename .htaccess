@@ -1,41 +1,10 @@
-######## URL rewriting ########
-
 Options +FollowSymLinks -MultiViews
+
+######## URL rewriting ########
 
 <IfModule mod_rewrite.c>
 
     RewriteEngine  on
-
-    # Protection de la lecture des répertoires
-
-    RewriteCond %{REQUEST_URI} ^/api/*
-    RewriteRule ^.*$ /index.php [R=403,NC,L]
-
-    RewriteCond %{REQUEST_URI} ^/cache/*.php*
-    RewriteRule ^.*$ /index.php [R=403,NC,L]
-
-    RewriteCond %{REQUEST_URI} ^/language/*
-    RewriteRule ^.*$ /index.php [R=403,NC,L]
-
-    RewriteCond %{REQUEST_URI} ^/classes/*
-    RewriteRule ^.*$ /index.php [R=403,NC,L]
-
-    RewriteCond %{REQUEST_URI} ^/controllers/*
-    RewriteRule ^.*$ /index.php [R=403,NC,L]
-
-    RewriteCond %{REQUEST_URI} ^/framework/*
-    RewriteRule ^.*$ /index.php [R=403,NC,L]
-
-    RewriteCond %{REQUEST_URI} ^/html/*
-    RewriteRule ^.*$ /index.php [R=403,NC,L]
-
-    RewriteCond %{REQUEST_URI} ^/logs/*
-    RewriteRule ^.*$ /index.php [R=403,NC,L]
-
-    RewriteCond %{REQUEST_URI} ^/models/*
-    RewriteRule ^.*$ /index.php [R=403,NC,L]
-
-    # Rewrite du framework
 
     RewriteCond %{REQUEST_URI} ^/images/*
     RewriteRule ^.*$ /image.php [L]
@@ -72,4 +41,3 @@ Options -Indexes
 
 php_flag  log_errors        on
 php_flag  display_errors    off
-php_value upload_tmp_dir    "temporary/"

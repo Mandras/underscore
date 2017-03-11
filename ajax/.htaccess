@@ -1,0 +1,16 @@
+<IfModule mod_rewrite.c>
+
+    RewriteEngine  on
+
+    RewriteCond %{REQUEST_FILENAME} \.
+    RewriteRule ^.*$ / [R=403,NC,L]
+    RewriteRule ^.*$ /index.php [L]
+
+</IfModule>
+
+<IfModule !mod_rewrite.c>
+
+    order deny,allow
+    deny from all
+
+</IfModule>

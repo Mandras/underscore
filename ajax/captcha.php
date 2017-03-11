@@ -1,7 +1,5 @@
 <?php
 
-if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
-
 function random($tab) { return ($tab[array_rand($tab)]); }
 
 function getCode($length) {

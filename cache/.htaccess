@@ -1,0 +1,4 @@
+<FilesMatch "\.(?:inc|php|py|rb)$">
+	order allow,deny
+	deny from all
+</FilesMatch>

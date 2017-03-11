@@ -7,11 +7,11 @@
     <!--[if IE]><link rel="shortcut icon" type="image/x-icon" href="{$siteurl}/images/favicon.ico" /><![endif]-->
     <!--[if lt IE 9]><script type="text/javascript" src="{$siteurl}/js/html5shiv.min.js"></script><![endif]-->
 
-    {if $_JSVariables ne ''}{if $_Environment === 0}<script type="text/javascript">/*<![CDATA[*/{section loop=$_JSVariables name=_JSV}var {$_JSVariables[_JSV].key}={if is_numeric($_JSVariables[_JSV].value)}{$_JSVariables[_JSV].value}{else}"{$_JSVariables[_JSV].value}"{/if};{/section}/*]]>*/</script>{else}
+    {if $_JSVariables ne ''}{if $_Environment === 0}<script type="text/javascript">/*<![CDATA[*/{section loop=$_JSVariables name=_JSV}var {$_JSVariables[_JSV].key}={$_JSVariables[_JSV].value};{/section}/*]]>*/</script>{else}
     <script type="text/javascript">
 //<![CDATA[
 {section loop=$_JSVariables name=_JSV}
-var {$_JSVariables[_JSV].key} = {if is_numeric($_JSVariables[_JSV].value)}{$_JSVariables[_JSV].value}{else}"{$_JSVariables[_JSV].value}"{/if};
+var {$_JSVariables[_JSV].key} = {$_JSVariables[_JSV].value};
 {/section}
 //]]>
 </script>
@@ -19,19 +19,11 @@ var {$_JSVariables[_JSV].key} = {if is_numeric($_JSVariables[_JSV].value)}{$_JSV
     {/if}
 
     {section loop=$_CSS name=_c}
-    {if $_CSS[_c]|strpos:$_RequestScheme === 0}
     <link rel="stylesheet" type="text/css" href="{$_CSS[_c]}" />
-    {else}
-    <link rel="stylesheet" type="text/css" href="{$siteurl}/css/{$_CSS[_c]}" />
-    {/if}
     {/section}
 
     {section loop=$_JS name=_j}
-    {if $_JS[_j]|strpos:$_RequestScheme === 0}
     <script type="text/javascript" src="{$_JS[_j]}"></script>
-    {else}
-    <script type="text/javascript" src="{$siteurl}/js/{$_JS[_j]}"></script>
-    {/if}
     {/section}
 
     <meta name="viewport" content="{$_ViewPort}" />
@@ -58,27 +50,15 @@ var {$_JSVariables[_JSV].key} = {if is_numeric($_JSVariables[_JSV].value)}{$_JSV
 
     {include file="footer.html"}
 
-    {*
-    ** JS and CSS loaded asynchronously - so the page load faster
-    *}
-
     {section loop=$_CSSAsync name=_cssasync}
-    {if $_CSSAsync[_cssasync]|strpos:$_RequestScheme === 0}
     <link rel="stylesheet" type="text/css" property='stylesheet' href="{$_CSSAsync[_cssasync]}" />
-    {else}
-    <link rel="stylesheet" type="text/css" property='stylesheet' href="{$siteurl}/css/{$_CSSAsync[_cssasync]}" />
-    {/if}
     {/section}
 
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script type="text/javascript" src="{$siteurl}/js/jquery.min.js"><\/script>')</script>
 
     {section loop=$_JSAsync name=_jsasync}
-    {if $_JSAsync[_jsasync]|strpos:$_RequestScheme === 0}
     <script type="text/javascript" src="{$_JSAsync[_jsasync]}"></script>
-    {else}
-    <script type="text/javascript" src="{$siteurl}/js/{$_JSAsync[_jsasync]}"></script>
-    {/if}
     {/section}
 
 </body>
