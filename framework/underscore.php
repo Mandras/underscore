@@ -107,11 +107,18 @@ class _ {
 			}
 
 			// Si la variable siteurl est modifiee, alors on le remplace dans REQUEST_URI
-			if (isset($CONFIGINI["siteurl"]) && !empty($CONFIGINI["siteurl"]))
-				$_SERVER["REQUEST_URI"] = str_replace($CONFIGINI["siteurl"], '', $_SERVER["REQUEST_SCHEME"] . '://' . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
+			if (isset($CONFIGINI["siteurl"])) {
+				if (substr($CONFIGINI["siteurl"], -1) == '/')
+					$CONFIGINI["siteurl"] = substr($CONFIGINI["siteurl"], 0, -1);
+				if (!empty($CONFIGINI["siteurl"])) {
+					$_SERVER["REQUEST_URI"] = str_replace($CONFIGINI["siteurl"], '', $_SERVER["REQUEST_SCHEME"] . '://' . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
+					self::$siteurl = $CONFIGINI["siteurl"];
+				}
+			}
 
 			unset($CONFIGINI);
 		}
+		else error(500, "Manque le fichier de configuration: config.ini");
 
 		// Definition de la route
 
