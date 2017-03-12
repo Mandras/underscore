@@ -218,7 +218,7 @@ class _ {
 
 		// Gestion du cache CSS & JS
 
-		if (self::$environment == PROD && self::$minifier) {
+		if (self::$minifier) {
 			self::cache_generator(self::$js_async, 'js');
 			self::cache_generator(self::$js, 'js');
 		
@@ -227,18 +227,15 @@ class _ {
 
 			self::$smarty->loadFilter("output", "strip");
 		}
-		// Gestion des delais d'execution
-		else {
+		else self::$smarty->loadFilter("output", "trimwhitespace");
 
-			if (self::$environment == PROD) self::$environment = UNDFN;
+		if (self::$environment == DEV) {
 
 			$mt_exec_php = microtime(true) - self::$time_start - mysql::$execution_time;
 			self::assign('_execution_time_php', 	number_format($mt_exec_php, 5, ',', ''));
 			self::assign('_execution_time_mysql', 	number_format(mysql::$execution_time, 5, ',', ''));
 			self::assign('_execution_time_total', 	number_format($mt_exec_php + mysql::$execution_time, 5, ',', ''));
 			unset($mt_exec_php);
-
-			self::$smarty->loadFilter("output", "trimwhitespace");
 		}
 
 		// Traduction
@@ -286,6 +283,7 @@ class _ {
 		self::assign('_Language', 		self::$langue);
 		self::assign("_Metas", 			self::$metas);
 		self::assign('_Environment', 	self::$environment);
+		self::assign('_Minifier', 		self::$minifier);
 
 		self::assign('siteurl', 		self::$siteurl);
 		self::assign('scriptname', 		self::$route[0]);
@@ -297,23 +295,35 @@ class _ {
 		// Encodage des assets CSS & JS
 
 		foreach (self::$css as $key => $value) {
-			if (filter_var($value, FILTER_VALIDATE_URL) === false)
+			if (filter_var($value, FILTER_VALIDATE_URL) === false) {
 				self::$css[$key] = self::$siteurl . '/css/' . $value;
+				if (self::$environment == DEV && strpos($value, '?') === false && file_exists(__DIR__ . '/../css/' . $value))
+					self::$css[$key] .= '?v=' . filemtime(__DIR__ . '/../css/' . $value);
+			}
 		}
 
 		foreach (self::$css_async as $key => $value) {
-			if (filter_var($value, FILTER_VALIDATE_URL) === false)
+			if (filter_var($value, FILTER_VALIDATE_URL) === false) {
 				self::$css_async[$key] = self::$siteurl . '/css/' . $value;
+				if (self::$environment == DEV && strpos($value, '?') === false && file_exists(__DIR__ . '/../css/' . $value))
+					self::$css_async[$key] .= '?v=' . filemtime(__DIR__ . '/../css/' . $value);
+			}
 		}
 
 		foreach (self::$js as $key => $value) {
-			if (filter_var($value, FILTER_VALIDATE_URL) === false)
+			if (filter_var($value, FILTER_VALIDATE_URL) === false) {
 				self::$js[$key] = self::$siteurl . '/js/' . $value;
+				if (self::$environment == DEV && strpos($value, '?') === false && file_exists(__DIR__ . '/../js/' . $value))
+					self::$js[$key] .= '?v=' . filemtime(__DIR__ . '/../js/' . $value);
+			}
 		}
 
 		foreach (self::$js_async as $key => $value) {
-			if (filter_var($value, FILTER_VALIDATE_URL) === false)
+			if (filter_var($value, FILTER_VALIDATE_URL) === false) {
 				self::$js_async[$key] = self::$siteurl . '/js/' . $value;
+				if (self::$environment == DEV && strpos($value, '?') === false && file_exists(__DIR__ . '/../js/' . $value))
+					self::$js_async[$key] .= '?v=' . filemtime(__DIR__ . '/../js/' . $value);
+			}
 		}
 
 		self::assign("_CSS",		self::$css);
@@ -433,10 +443,14 @@ class _ {
 		else return (array());
 
 		$total_mtime = 0;
+		$total_string = '';
 		$ext_array = array();
 		foreach ($array as $value) {
 			if (filter_var($value, FILTER_VALIDATE_URL) === false) {
-				if (file_exists($directory . $value)) $total_mtime += filemtime($directory . $value);
+				if (file_exists($directory . $value)) {
+					$total_mtime += filemtime($directory . $value);
+					$total_string .= substr($value, -5);
+				}
 				else return (array());
 			}
 			else $ext_array []= $value;
@@ -444,7 +458,7 @@ class _ {
 
 		if ($total_mtime == 0) return (array());
 
-		$total_mtime = md5($total_mtime);
+		$total_mtime = md5($total_string . $total_mtime);
 
 		if (!file_exists(__DIR__ . '/../cache/' . $total_mtime . '.' . $type) || $force == true) {
 			if (!file_exists(__DIR__ . '/../cache/') || !is_dir(__DIR__ . '/../cache/'))

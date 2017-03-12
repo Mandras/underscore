@@ -7,7 +7,7 @@
     <!--[if IE]><link rel="shortcut icon" type="image/x-icon" href="{$siteurl}/images/favicon.ico" /><![endif]-->
     <!--[if lt IE 9]><script type="text/javascript" src="{$siteurl}/js/html5shiv.min.js"></script><![endif]-->
 
-    {if $_JSVariables ne ''}{if $_Environment === 0}<script type="text/javascript">/*<![CDATA[*/{section loop=$_JSVariables name=_JSV}var {$_JSVariables[_JSV].key}={$_JSVariables[_JSV].value};{/section}/*]]>*/</script>{else}
+    {if $_JSVariables ne ''}{if $_Minifier === 1}<script type="text/javascript">/*<![CDATA[*/{section loop=$_JSVariables name=_JSV}var {$_JSVariables[_JSV].key}={$_JSVariables[_JSV].value};{/section}/*]]>*/</script>{else}
     <script type="text/javascript">
 //<![CDATA[
 {section loop=$_JSVariables name=_JSV}
