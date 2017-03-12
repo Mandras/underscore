@@ -215,8 +215,7 @@
 	Dans le fichier HTML, placez le texte à traduire ainsi: <code>{literal}{language}hello_you{/language}{/literal}</code><br /><br />
 
 	<div class="alert alert-info" role="alert">
-		<u>Par défaut, le module de traduction est actif !</u> Pour le désactiver sur tout le site, il suffit de mettre <code>translate = false</code> dans le fichier <b>config.ini</b><br />
-		Vous avez aussi le choix de l'activer ou le désactiver pour une page bien précise en mettant ce code dans votre controller: <code>_::$translate = true;</code><br /><br />
+		<u>Par défaut, le module de traduction est inactif !</u> Pour le l&apos;activer sur tout le site, il suffit de mettre <code>translate = true</code> dans le fichier <b>config.ini</b><br />
 		Underscore détecte automatiquement la langue du navigateur et l'enregistre dans <code>_::$language</code><br />
 		Si le fichier <b>XML</b> n'existe pas pour la langue de l'internaute, on utilisera la langue contenu dans <code>_::$default_language</code> <i>(par défaut: <b>en</b>)</i><br /><br />
 		Pour forcer l'utilisation d'une langue particulière, vous pouvez procéder ainsi: <code>_::$language = 'en';</code>

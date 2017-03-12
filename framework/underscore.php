@@ -10,8 +10,6 @@ require_once(__DIR__ . "/smarty/Smarty.class.php");
 require_once(__DIR__ . "/../classes/error.php");
 require_once(__DIR__ . "/../classes/mysql.php");
 
-require_once(__DIR__ . "/../api/mobile_detect/mobile_detect.php");
-
 class _ {
 	private static $dev_environment = array();
 
@@ -22,12 +20,14 @@ class _ {
 	private static $time_start = 0;
 
 	private static $language_block = 'language';
-	private static $default_language = '';
+	private static $default_language = 'en';
 	private static $languages = array();
 	private static $translate = true;
 	private static $language;
 
 	protected static $environment = PROD;
+
+	private static $mobile_detect = true;
 
 	public static $is_desktop = 0;
 	public static $is_tablet = 0;
@@ -151,20 +151,27 @@ class _ {
 
 		// Language detection
 
-		if (!isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) || strlen($_SERVER['HTTP_ACCEPT_LANGUAGE']) < 2)
-			$_SERVER['HTTP_ACCEPT_LANGUAGE'] = self::$default_language;
-		self::$language = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+		if (self::$translate) {
+			if (!isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) || strlen($_SERVER['HTTP_ACCEPT_LANGUAGE']) < 2)
+				$_SERVER['HTTP_ACCEPT_LANGUAGE'] = self::$default_language;
+			self::$language = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+		}
 
 		// Device detection
 
-		$MOBILE_DETECT = new Mobile_Detect;
-		if ($MOBILE_DETECT->isMobile() && !$MOBILE_DETECT->isTablet())
-			self::$is_mobile = 1;
-		else if (!$MOBILE_DETECT->isMobile() && $MOBILE_DETECT->isTablet())
-			self::$is_tablet = 1;
-		else
-			self::$is_desktop = 1;
-		unset($MOBILE_DETECT);
+		if (self::$mobile_detect) {
+
+			require_once(__DIR__ . "/../api/mobile_detect/mobile_detect.php");
+
+			$MOBILE_DETECTION = new Mobile_Detect;
+			if ($MOBILE_DETECTION->isMobile() && !$MOBILE_DETECTION->isTablet())
+				self::$is_mobile = 1;
+			else if (!$MOBILE_DETECTION->isMobile() && $MOBILE_DETECTION->isTablet())
+				self::$is_tablet = 1;
+			else
+				self::$is_desktop = 1;
+			unset($MOBILE_DETECTION);
+		}
 
 		// Verification environnement de production ou developpement
 
@@ -174,10 +181,15 @@ class _ {
 
 		self::$js_variables []= array("key" => "siteurl", 		"value" => self::$siteurl);
 		self::$js_variables []= array("key" => "scriptname", 	"value" => self::$route[0]);
-		self::$js_variables []= array("key" => "language", 		"value" => self::$language);
-		self::$js_variables []= array("key" => "is_desktop", 	"value" => self::$is_desktop);
-		self::$js_variables []= array("key" => "is_tablet", 	"value" => self::$is_tablet);
-		self::$js_variables []= array("key" => "is_mobile", 	"value" => self::$is_mobile);
+
+		if (self::$translate)
+			self::$js_variables []= array("key" => "language", 		"value" => self::$language);
+
+		if (self::$mobile_detect) {
+			self::$js_variables []= array("key" => "is_desktop", 	"value" => self::$is_desktop);
+			self::$js_variables []= array("key" => "is_tablet", 	"value" => self::$is_tablet);
+			self::$js_variables []= array("key" => "is_mobile", 	"value" => self::$is_mobile);
+		}
 
 		// On verifie si il s'agit de la page d'accueil ou d'une page introuvable
 
@@ -287,10 +299,15 @@ class _ {
 
 		self::assign('siteurl', 		self::$siteurl);
 		self::assign('scriptname', 		self::$route[0]);
-		self::assign('language', 		self::$language);
-		self::assign('is_desktop', 		self::$is_desktop);
-		self::assign('is_tablet', 		self::$is_tablet);
-		self::assign('is_mobile', 		self::$is_mobile);
+
+		if (self::$translate)
+			self::assign('language', 		self::$language);
+
+		if (self::$mobile_detect) {
+			self::assign('is_desktop', 		self::$is_desktop);
+			self::assign('is_tablet', 		self::$is_tablet);
+			self::assign('is_mobile', 		self::$is_mobile);
+		}
 
 		// Encodage des assets CSS & JS
 
